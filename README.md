@@ -67,8 +67,8 @@ src/main/java/br/gov/sp/fatec/pg/Main.java
 Sistema Web: http://localhost:7078
 Documentação API (Swagger): http://localhost:7078/swagger
 
-👥 Autores (Grupo)
-Eduarda Lima
-Nathalia Cappellini
-Vitor Lopes
+👥 Autores:
+Eduarda Lima, 
+Nathalia Cappellini, 
+Vitor Lopes, 
 Mateus Pinheiro
