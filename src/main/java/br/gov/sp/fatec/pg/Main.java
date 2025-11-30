@@ -169,6 +169,6 @@ public class Main {
             ctx.status(204);
         });
 
-        System.out.println("✅ Sistema Rodando! Acesse: http://localhost:7078");
+        System.out.println("Sistema Rodando! Acesse: http://localhost:7078");
     }
 }
