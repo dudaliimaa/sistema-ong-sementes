@@ -1,4 +1,4 @@
-package br.gov.sp.fatec.pg.database;   // Define o pacote onde essa classe está localizada
+package br.gov.sp.fatec.pg.database;
 
 import java.sql.Connection;            // Importa a classe de conexão do JDBC
 import java.sql.DriverManager;         // Importa o gerenciador que cria conexões com o banco

@@ -1,43 +1,81 @@
 package br.gov.sp.fatec.pg.model;
 
 /**
- * Classe que representa a entidade Doação no sistema.
- * Armazena os dados do item doado e o vínculo com o voluntário que registrou.
+ * Classe Modelo que representa uma Doação no sistema.
+ * Atualizada para incluir informações de logística (Quantidade e Destino).
  */
 public class Doacao {
-    // Identificador único da doação (Gerado pelo Banco de Dados)
+    
+    // Identificador único (Chave Primária)
     private Integer id;
     
-    // Descrição do item (Ex: "Cesta Básica", "Roupas")
+    // O que é o item (Ex: "Arroz", "Roupas")
     private String descricao;
     
-    // Status da doação: false = Pendente de coleta, true = Recebido na ONG
+    // Quantidade do item (Ex: "5kg", "2 caixas", "1 unidade")
+    // Usamos String para permitir unidades variadas.
+    private String quantidade; 
+    
+    // Local para onde a doação vai ou onde deve ser entregue
+    // Ex: "Sede da ONG", "Centro Comunitário", "Família Silva"
+    private String destino;    
+    
+    // Status: false = Pendente, true = Recebido no Estoque
     private Boolean recebido;
     
-    // ID do voluntário responsável (Chave Estrangeira)
+    // ID do voluntário que cadastrou (Chave Estrangeira)
     private Integer userId;
 
-    // Construtor vazio (necessário para serialização JSON)
     public Doacao() {}
 
-    // Construtor para criar uma nova doação
-    public Doacao(String descricao, Integer userId) {
+    // Construtor completo com os novos campos de logística
+    public Doacao(String descricao, String quantidade, String destino, Integer userId) {
         this.descricao = descricao;
+        this.quantidade = quantidade;
+        this.destino = destino;
         this.userId = userId;
-        this.recebido = false; // Padrão: inicia como pendente
+        this.recebido = false; // Padrão: Inicia como não recebido
     }
 
-    // Métodos de Encapsulamento (Getters e Setters)
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
+    // Getters e Setters
+    public Integer getId() { 
+        return id; 
+    }
+    public void setId(Integer id) { 
+        this.id = id; 
+    }
+    
     public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
-
-    public Boolean isRecebido() { return recebido; }
-    public void setRecebido(Boolean recebido) { this.recebido = recebido; }
-
-    public Integer getUserId() { return userId; }
-    public void setUserId(Integer userId) { this.userId = userId; }
+    public void setDescricao(String descricao) { 
+        this.descricao = descricao; 
+    }
+    
+    // Getters e Setters para os novos campos
+    public String getQuantidade() { 
+        return quantidade; 
+    }
+    public void setQuantidade(String quantidade) { 
+        this.quantidade = quantidade; 
+    }
+    
+    public String getDestino() { 
+        return destino; 
+    }
+    public void setDestino(String destino) { 
+        this.destino = destino; 
+    }
+    
+    public Boolean isRecebido() { 
+        return recebido; 
+    }
+    public void setRecebido(Boolean recebido) { 
+        this.recebido = recebido; 
+    }
+    
+    public Integer getUserId() { 
+        return userId; 
+    }
+    public void setUserId(Integer userId) { 
+        this.userId = userId; 
+    }
 }
