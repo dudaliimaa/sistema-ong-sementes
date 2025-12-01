@@ -43,4 +43,9 @@ public class User {
 
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
+
+    private String adminCode; // Não salva no banco, serve apenas para transporte
+
+    public String getAdminCode() { return adminCode; }
+    public void setAdminCode(String adminCode) { this.adminCode = adminCode; }
 }

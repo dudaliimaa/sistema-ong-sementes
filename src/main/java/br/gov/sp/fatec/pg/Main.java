@@ -98,20 +98,28 @@ public class Main {
             }
         });
 
-        // Cadastro Público (Ainda sem Chave Mestra - Evolução virá depois)
+        // Cadastro com Validação de Chave Mestra
         app.post("/signup", ctx -> {
             try {
                 User newUser = ctx.bodyAsClass(User.class);
-                newUser.setRole(Role.USER); // Cadastro público é sempre Voluntário por enquanto
+                
+                // LÓGICA DE SEGURANÇA:
+                // Se o código for a senha mestra, vira ADMIN. Senão, é VOLUNTÁRIO.
+                if ("ONG-MASTER-2025".equals(newUser.getAdminCode())) {
+                    newUser.setRole(Role.ADMIN);
+                } else {
+                    newUser.setRole(Role.USER);
+                }
                 
                 if(UserRepository.validate(newUser.getUsername(), "")) {
                      ctx.status(400).json(Map.of("error", "Usuário já existe"));
                      return;
                 }
+                
                 UserRepository.add(newUser);
-                ctx.status(201).json(Map.of("message", "Cadastro realizado!"));
+                ctx.status(201).json(Map.of("message", "Cadastro realizado com sucesso!"));
             } catch (Exception e) {
-                ctx.status(500).json(Map.of("error", "Erro Cadastro: " + e.getMessage()));
+                ctx.status(500).json(Map.of("error", "Erro ao cadastrar: " + e.getMessage()));
             }
         });
 
@@ -122,7 +130,7 @@ public class Main {
             ctx.status(204);
         });
 
-        // --- Doações (Voluntário) ---
+        // Doações (Voluntário)
         app.get("/api/doacoes", ctx -> {
             User user = ctx.attribute("user");
             ctx.json(DoacaoRepository.getByUserId(user.getId()));
@@ -137,7 +145,7 @@ public class Main {
             ctx.status(201).json(Map.of("message", "Doação Salva"));
         });
 
-        // --- Doações (Admin) ---
+        // Doações (Admin)
         app.get("/api/admin/doacoes", ctx -> {
             ctx.json(DoacaoRepository.getAll());
         });
@@ -156,7 +164,7 @@ public class Main {
             ctx.status(204);
         });
 
-        // --- Gestão de Equipe (Admin) ---
+        // Gestão de Equipe (Admin)
         app.get("/api/admin/users", ctx -> ctx.json(UserRepository.getAllUsers()));
         
         app.post("/api/admin/users", ctx -> {
