@@ -1,0 +1,20 @@
+# Ignorar arquivos de compilação Java
+target/
+*.class
+
+# Ignorar configurações de IDE (para não dar conflito se o professor usar Eclipse/IntelliJ)
+.vscode/
+.idea/
+*.iml
+.settings/
+.classpath
+.project
+bin/
+
+# Ignorar o arquivo do banco de dados (cada um tem o seu local)
+*.db
+*.sqlite
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
