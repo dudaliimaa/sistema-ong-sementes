@@ -26,8 +26,8 @@ public class DoacaoRepository {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setString(1, d.getDescricao()); // O que é (ex: Arroz)
-            ps.setString(2, d.getQuantidade()); // [NOVO] Quanto é (ex: 5kg)
-            ps.setString(3, d.getDestino());    // [NOVO] Pra onde vai (ex: Sede)
+            ps.setString(2, d.getQuantidade()); // Quanto é (ex: 5kg)
+            ps.setString(3, d.getDestino());    // Pra onde vai (ex: Sede)
             ps.setBoolean(4, d.isRecebido());   // Status (Pendente/Recebido)
             ps.setInt(5, d.getUserId());        // Quem cadastrou (Vínculo)
             
