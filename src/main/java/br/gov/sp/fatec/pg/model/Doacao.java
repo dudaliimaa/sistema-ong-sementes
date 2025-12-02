@@ -2,22 +2,16 @@ package br.gov.sp.fatec.pg.model;
 
 /**
  * Classe Modelo que representa uma Doação no sistema.
- * Atualizada para incluir informações de logística (Quantidade e Destino).
  */
 public class Doacao {
     
-    // Identificador único (Chave Primária)
+    //Chave Primária
     private Integer id;
     
-    // O que é o item (Ex: "Arroz", "Roupas")
     private String descricao;
     
-    // Quantidade do item (Ex: "5kg", "2 caixas", "1 unidade")
-    // Usamos String para permitir unidades variadas.
     private String quantidade; 
     
-    // Local para onde a doação vai ou onde deve ser entregue
-    // Ex: "Sede da ONG", "Centro Comunitário", "Família Silva"
     private String destino;    
     
     // Status: false = Pendente, true = Recebido no Estoque
@@ -28,7 +22,7 @@ public class Doacao {
 
     public Doacao() {}
 
-    // Construtor completo com os novos campos de logística
+    // Construtor
     public Doacao(String descricao, String quantidade, String destino, Integer userId) {
         this.descricao = descricao;
         this.quantidade = quantidade;
