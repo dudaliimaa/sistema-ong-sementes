@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal ONG Sementes do Amanhã</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     
     <style>
-        /* --- CONFIGURAÇÕES GERAIS --- */
+        /* --- CONFIGURAÇÕES DE ESTILO (CSS) --- */
         body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
         :root {
             --primary-color: #0f4c75; /* Azul Profundo */
@@ -25,27 +26,27 @@
         .btn-ong:hover { background-color: #0b3857; color: white; transform: translateY(-2px); }
         .ong-logo { height: 50px; width: auto; margin-right: 10px; background: white; border-radius: 50%; padding: 2px; } 
         
-        /* Sidebar */
+        /* Sidebar (Barra Lateral) */
         .sidebar { min-height: 100vh; background: linear-gradient(180deg, var(--primary-color) 0%, #1b262c 100%); color: white; width: 260px; position: fixed; z-index: 1000; box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
         .sidebar a { color: rgba(255,255,255,0.8); text-decoration: none; padding: 14px 25px; display: flex; align-items: center; border-left: 4px solid transparent; transition: 0.3s; margin-bottom: 5px; }
         .sidebar a:hover, .sidebar a.active { background-color: rgba(255,255,255,0.1); color: white; border-left-color: var(--highlight); font-weight: 600; }
         .sidebar-brand { padding: 20px; font-size: 1.2rem; font-weight: bold; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
         
-        /* Layout */
+        /* Layout Principal */
         .wrapper { display: flex; width: 100%; }
         .main-content { width: 100%; padding: 40px; margin-left: 260px; min-height: 100vh; }
         
-        /* Landing Page */
+        /* Landing Page (Tela Inicial) */
         .landing-hero { background: linear-gradient(rgba(15, 76, 117, 0.9), rgba(27, 38, 44, 0.85)), url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1920'); background-size: cover; background-position: center; height: 100vh; color: white; display: flex; align-items: center; justify-content: center; text-align: center; }
         
-        /* Cards */
+        /* Cards de Estatísticas */
         .stat-card { border: none; border-radius: 16px; padding: 25px; color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.1); position: relative; overflow: hidden; transition: transform 0.3s; }
         .stat-card:hover { transform: translateY(-5px); }
         .bg-grad-1 { background: linear-gradient(45deg, #0f4c75, #3282b8); }
         .bg-grad-2 { background: linear-gradient(45deg, #ff9f1a, #ffc107); }
         .bg-grad-3 { background: linear-gradient(45deg, #20bf6b, #26de81); }
 
-        /* Perfil */
+        /* Estilos do Perfil */
         .profile-header { background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); height: 200px; border-radius: 16px 16px 0 0; position: relative; }
         .profile-avatar { width: 160px; height: 160px; border-radius: 50%; border: 5px solid white; background-color: #e9ecef; margin-top: -80px; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         
@@ -65,21 +66,20 @@
                 extraData: {}, 
                 isAdmin: false,
                 
-                // Forms
+                // Formulários
                 form: { username: '', password: '', adminCode: '' },
                 
-                // Form Perfil (Completo)
+                // Dados do Perfil
                 editingProfile: false,
                 profileForm: { name: '', email: '', phone: '', address: '', bio: '', photoUrl: '' },
                 
                 newDesc: '', list: [], usersList: [], modalUser: false, newUserForm: { username: '', password: '', role: 'USER' },
                 toast: { show: false, msg: '', type: 'success' },
 
-                // LOGO (URL Fictícia para simular a sua imagem local - troque se subir a imagem)
-                // Como não posso hospedar sua imagem, estou usando um placeholder. 
-                // Se você colocar o arquivo "logo.jpg" na pasta static, mude aqui para 'logo.jpg'
+                // LOGO (Placeholder)
                 logoSrc: 'https://cdn-icons-png.flaticon.com/512/1598/1598196.png', 
 
+                // Inicialização do Sistema
                 init() {
                     try { this.user = JSON.parse(localStorage.getItem('user')) || {}; } catch (e) { this.user = {}; }
                     this.loadExtraData();
@@ -90,6 +90,7 @@
                     }
                 },
 
+                // Carrega dados extras do perfil (simulado)
                 loadExtraData() {
                     const key = `profile_${this.user.username || 'guest'}`;
                     const stored = localStorage.getItem(key);
@@ -129,6 +130,8 @@
                     if (res.status === 401) { this.logout(); return null; }
                     return res;
                 },
+                
+                // Funções de Autenticação
                 async login() {
                     const res = await fetch('/login', { method: 'POST', body: JSON.stringify(this.form) });
                     if(res && res.ok) {
@@ -151,6 +154,7 @@
                 },
                 logout() { this.token = null; localStorage.clear(); this.view = 'home'; },
                 
+                // Funções de Dados (Doações)
                 async fetchAll() {
                     if(!this.token) return;
                     const url = this.isAdmin ? '/admin/doacoes' : '/doacoes';
@@ -170,6 +174,8 @@
                 async deleteDoacao(id) {
                     if(confirm("Tem certeza que deseja excluir?")) { await this.req(`/doacoes/${id}`, 'DELETE'); this.fetchAll(); }
                 },
+                
+                // Funções Administrativas (Usuários)
                 async fetchUsers() {
                     const res = await this.req('/admin/users');
                     if(res && res.ok) this.usersList = await res.json();
@@ -181,6 +187,8 @@
                 async deleteUser(u) {
                     if(confirm("Remover membro?")) { await this.req(`/admin/users/${u}`, 'DELETE'); this.fetchUsers(); }
                 },
+                
+                // Sistema de Notificação
                 notify(msg, type) {
                     this.toast = { show: true, msg, type };
                     setTimeout(() => this.toast.show = false, 3000);
@@ -208,7 +216,10 @@
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-3 align-items-center">
                         <li class="nav-item"><a class="nav-link text-white fw-semibold cursor-pointer" @click="view='home'">Início</a></li>
                         <li class="nav-item"><a class="nav-link text-white fw-semibold cursor-pointer" @click="view='about'">Quem Somos</a></li>
+                        
                         <li class="nav-item"><button class="btn btn-outline-light px-4 fw-bold rounded-pill" @click="view='login'">Login</button></li>
+                        
+                        <li class="nav-item"><button class="btn btn-light text-ong px-4 fw-bold rounded-pill" @click="view='register'">Cadastre-se</button></li>
                     </ul>
                 </div>
             </div>
@@ -250,8 +261,8 @@
                         <div class="form-floating mb-4"><input type="password" x-model="form.password" class="form-control rounded-3" id="pLogin" placeholder="Pass" required><label for="pLogin">Senha</label></div>
                         <button class="btn btn-ong w-100 py-3 fw-bold rounded-pill">ENTRAR</button>
                     </form>
-                    <div class="text-center mt-4"><button class="btn btn-link text-muted small text-decoration-none" @click="view='register'">Não tem conta? Cadastre-se</button></div>
-                </div>
+                    
+                    </div>
             </div>
         </div>
 
