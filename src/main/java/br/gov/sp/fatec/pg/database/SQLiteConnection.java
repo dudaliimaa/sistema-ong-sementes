@@ -1,73 +1,67 @@
-package br.gov.sp.fatec.pg.database;   // Define o pacote onde essa classe está localizada
+package br.gov.sp.fatec.pg.database;
 
-import java.sql.Connection;            // Importa a classe de conexão do JDBC
-import java.sql.DriverManager;         // Importa o gerenciador que cria conexões com o banco
-import java.sql.Statement;             // Importa a classe usada para executar comandos SQL
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 
 /**
- * Classe responsável pela conexão com o Banco de Dados SQLite.
- * Gerencia a criação do arquivo do banco e a estrutura das tabelas.
+ * Classe responsável pela Infraestrutura do Banco de Dados.
+ * Ela gerencia a conexão com o arquivo físico (.db) e cria a estrutura das tabelas (DDL).
  */
 public class SQLiteConnection {
 
-
-    public static void main(String[] args) {
-    try {
-        System.out.println("Iniciando teste da conexão SQLite...");
-        createTables();
-        System.out.println("✓ Teste concluído: Banco criado e tabelas verificadas!");
-    } catch (Exception e) {
-        System.out.println("✗ Erro ao testar conexão:");
-        e.printStackTrace();
-    }
-}
-
-
-    // Caminho do arquivo SQLite que será criado no diretório raiz do projeto.
-    // "jdbc:sqlite:" indica para o Driver que será usado SQLite.
+    // Define o caminho e o nome do arquivo do banco. 
+    // "jdbc:sqlite" diz ao Java qual driver usar.
     private static final String URL = "jdbc:sqlite:ong.db";
 
     /**
-     * Método responsável por abrir a conexão com o banco de dados.
-     * @return Retorna um objeto Connection já conectado ao banco.
-     * @throws Exception Caso o driver não exista ou o arquivo não possa ser lido.
+     * Método utilitário para abrir uma conexão.
+     * É usado por todos os Repositórios quando precisam salvar ou ler dados.
      */
     public static Connection connect() throws Exception {
-        return DriverManager.getConnection(URL); // Cria e retorna a conexão
+        return DriverManager.getConnection(URL);
     }
 
     /**
-     * Método chamado ao iniciar a aplicação para garantir que todas as tabelas existam.
-     * Caso não existam, o SQLite cria automaticamente.
+     * Método de Inicialização (Setup).
+     * É chamado no Main.java assim que o sistema liga.
+     * Garante que as tabelas existam antes de qualquer operação.
      */
     public static void createTables() {
-
-        // SQL para criar a tabela de Usuários
+        
+        // 1. Definição da Tabela de USUÁRIOS
         String sqlUsers = "CREATE TABLE IF NOT EXISTS users (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +  // ID automático
-                "username TEXT UNIQUE NOT NULL, " +         // Usuário único (não pode repetir)
-                "password TEXT NOT NULL, " +                // Senha criptografada
-                "role TEXT NOT NULL DEFAULT 'USER', " +     // Cargo do usuário (USER / ADMIN)
-                "token TEXT);";                             // Token para manter sessão
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " + // ID automático (1, 2, 3...)
+                "username TEXT UNIQUE NOT NULL, " +        // UNIQUE: Não permite dois usuários com mesmo nome
+                "password TEXT NOT NULL, " +               // Senha (será salvo o Hash criptografado)
+                "role TEXT NOT NULL DEFAULT 'USER', " +    // Nível de acesso (USER ou ADMIN)
+                "token TEXT);";                            // Guarda a sessão do usuário logado
 
-        // SQL para criar a tabela de Doações
+        // 2. Definição da Tabela de DOAÇÕES (Com Logística)
         String sqlDoacoes = "CREATE TABLE IF NOT EXISTS doacoes (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +  // ID automático
-                "descricao TEXT NOT NULL, " +               // Descrição do item doado
-                "recebido BOOLEAN DEFAULT FALSE, " +        // Flag: recebido ou não
-                "userId INTEGER NOT NULL, " +               // FK para o usuário
-                "FOREIGN KEY (userId) REFERENCES users(id));"; // Chave estrangeira ligando tabelas
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "descricao TEXT NOT NULL, " +
+                
+                // [NOVOS CAMPOS DE LOGÍSTICA]
+                "quantidade TEXT, " +  // Ex: "5kg", "2 caixas"
+                "destino TEXT, " +     // Ex: "Sede", "Família Silva"
+                
+                "recebido BOOLEAN DEFAULT FALSE, " + // Status: 0 (Pendente) ou 1 (Entregue)
+                "userId INTEGER NOT NULL, " +        // Quem registrou?
+                
+                // CHAVE ESTRANGEIRA (Foreign Key):
+                // Cria um vínculo inquebrável entre a doação e o usuário.
+                // Se tentarmos salvar uma doação sem dono, o banco bloqueia.
+                "FOREIGN KEY (userId) REFERENCES users(id));";
 
-        // Tenta criar as tabelas
-        try (Connection conn = connect();             // Abre a conexão
-             Statement stmt = conn.createStatement()) // Cria um executor de SQL
-        {
-            stmt.execute(sqlUsers);    // Executa criação da tabela users
-            stmt.execute(sqlDoacoes);  // Executa criação da tabela doacoes
-            System.out.println("Banco de dados ONG configurado e tabelas verificadas.");
+        // Bloco de Execução
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+            // Envia os comandos SQL para o arquivo do banco
+            stmt.execute(sqlUsers);
+            stmt.execute(sqlDoacoes);
+            System.out.println("Banco de dados configurado com Logística.");
         } catch (Exception e) {
-            System.err.println("Erro ao criar tabelas: " + e.getMessage()); // Exibe erro
-            e.printStackTrace();                                            // Mostra detalhes
+            e.printStackTrace();
         }
     }
 }

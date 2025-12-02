@@ -4,156 +4,137 @@ import br.gov.sp.fatec.pg.database.SQLiteConnection;
 import br.gov.sp.fatec.pg.model.Role;
 import br.gov.sp.fatec.pg.model.User;
 import org.mindrot.jbcrypt.BCrypt;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Repositório responsável pela persistência de usuários.
- * Gerencia criptografia de senhas e validação de tokens de sessão.
+ * Repositório de Usuários.
+ * Responsável por salvar, buscar e validar usuários no banco de dados.
+ * Aqui está concentrada a lógica de SEGURANÇA (Criptografia).
  */
 public class UserRepository {
 
     /**
-     * Cadastra um novo usuário no banco de dados.
-     * A senha é criptografada com BCrypt antes de ser salva para segurança.
+     * Cadastra um novo usuário.
+     * IMPORTANTE: A senha é criptografada com BCrypt antes de ser salva.
+     * Nunca salvamos a senha "crua" no banco por segurança.
      */
     public static void add(User user) throws Exception {
-        // Gera um hash seguro da senha (nunca salvamos a senha pura)
-        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-
+        // Gera o Hash da senha (transforma "123456" em um código ilegível)
+        String hash = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+        
         String sql = "INSERT INTO users(username, password, role) VALUES(?, ?, ?)";
-
-        // Uso de try-with-resources para garantir o fechamento da conexão
-        try (Connection conn = SQLiteConnection.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, user.getUsername());
-            pstmt.setString(2, hashedPassword); // Salva o hash
-            pstmt.setString(3, user.getRole().toString());
-
-            pstmt.executeUpdate();
+        
+        try (Connection conn = SQLiteConnection.connect(); 
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, hash); // Salva a versão criptografada
+            ps.setString(3, user.getRole().toString());
+            ps.executeUpdate();
         }
     }
 
     /**
-     * Verifica se o usuário e senha correspondem a um registro válido.
+     * Valida o Login.
+     * Busca a senha criptografada no banco e compara com a senha digitada.
      */
     public static boolean validate(String username, String password) throws Exception {
-        String sql = "SELECT password FROM users WHERE username = ?";
-        try (Connection conn = SQLiteConnection.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                String storedHash = rs.getString("password");
-                // Compara a senha digitada com o hash salvo no banco
-                return BCrypt.checkpw(password, storedHash);
-            }
+        try (Connection conn = SQLiteConnection.connect(); 
+             PreparedStatement ps = conn.prepareStatement("SELECT password FROM users WHERE username = ?")) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            
+            // Se achou o usuário, usa o BCrypt para verificar se a senha bate
+            if (rs.next()) return BCrypt.checkpw(password, rs.getString("password"));
         }
         return false;
     }
 
     /**
-     * Busca os dados completos de um usuário pelo nome (usado no login).
+     * Busca os dados completos do usuário (ID, Role) após o login.
+     * Necessário para o sistema saber se é ADMIN ou USER.
      */
     public static User getByUsername(String username) throws Exception {
-        String sql = "SELECT * FROM users WHERE username = ?";
-        try (Connection conn = SQLiteConnection.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                User u = new User();
-                u.setId(rs.getInt("id"));
-                u.setUsername(rs.getString("username"));
-                u.setRole(Role.valueOf(rs.getString("role")));
-                return u;
-            }
+        try (Connection conn = SQLiteConnection.connect(); 
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE username = ?")) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return map(rs); // Converte a linha do banco em Objeto User
         }
         return null;
     }
 
     /**
-     * Atualiza o token de sessão ao realizar login.
+     * Salva o Token de Sessão (UUID) no banco.
+     * Isso permite que o usuário continue logado enquanto navega.
      */
     public static void updateToken(String username, String token) throws Exception {
-        String sql = "UPDATE users SET token = ? WHERE username = ?";
-        try (Connection conn = SQLiteConnection.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, token);
-            pstmt.setString(2, username);
-            pstmt.executeUpdate();
+        try (Connection conn = SQLiteConnection.connect(); 
+             PreparedStatement ps = conn.prepareStatement("UPDATE users SET token = ? WHERE username = ?")) {
+            ps.setString(1, token);
+            ps.setString(2, username);
+            ps.executeUpdate();
         }
     }
 
     /**
-     * Valida quem é o usuário dono de um determinado token (Middleware de Auth).
+     * "O Porteiro": Verifica quem é o dono do Token que chegou na requisição.
+     * Usado em todas as rotas protegidas para autorizar o acesso.
      */
     public static User getUserByToken(String token) throws Exception {
-        String sql = "SELECT * FROM users WHERE token = ?";
-        try (Connection conn = SQLiteConnection.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, token);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                User u = new User();
-                u.setId(rs.getInt("id"));
-                u.setUsername(rs.getString("username"));
-                u.setRole(Role.valueOf(rs.getString("role")));
-                u.setToken(rs.getString("token"));
-                return u;
-            }
+        try (Connection conn = SQLiteConnection.connect(); 
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE token = ?")) {
+            ps.setString(1, token);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return map(rs);
         }
         return null;
     }
 
     /**
-     * Remove o token ao fazer logout.
+     * Logout: Apaga o token do banco, invalidando a sessão.
      */
     public static void removeToken(String token) throws Exception {
-        String sql = "UPDATE users SET token = NULL WHERE token = ?";
-        try (Connection conn = SQLiteConnection.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, token);
-            pstmt.executeUpdate();
+        try (Connection conn = SQLiteConnection.connect(); 
+             PreparedStatement ps = conn.prepareStatement("UPDATE users SET token = NULL WHERE token = ?")) {
+            ps.setString(1, token);
+            ps.executeUpdate();
         }
     }
 
     /**
-     * Lista todos os usuários cadastrados (Funcionalidade Admin).
+     * Lista todos os usuários (Funcionalidade exclusiva do painel ADMIN).
      */
     public static List<User> getAllUsers() throws Exception {
         List<User> list = new ArrayList<>();
-        String sql = "SELECT id, username, role FROM users";
-        try (Connection conn = SQLiteConnection.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) {
-                User u = new User();
-                u.setId(rs.getInt("id"));
-                u.setUsername(rs.getString("username"));
-                u.setRole(Role.valueOf(rs.getString("role")));
-                list.add(u);
-            }
+        try (Connection conn = SQLiteConnection.connect(); 
+             ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM users")) {
+            while (rs.next()) list.add(map(rs));
         }
         return list;
     }
 
     /**
-     * Remove um usuário do sistema (Funcionalidade Admin).
+     * Remove um usuário do sistema (Funcionalidade exclusiva do painel ADMIN).
      */
     public static boolean delete(String username) throws Exception {
-        String sql = "DELETE FROM users WHERE username = ?";
-        try (Connection conn = SQLiteConnection.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            return pstmt.executeUpdate() > 0;
+        try (Connection conn = SQLiteConnection.connect(); 
+             PreparedStatement ps = conn.prepareStatement("DELETE FROM users WHERE username = ?")) {
+            ps.setString(1, username);
+            return ps.executeUpdate() > 0;
         }
+    }
+
+    /**
+     * Método Auxiliar (Helper).
+     * Evita repetir código de conversão (Banco -> Objeto Java) em todos os métodos acima.
+     */
+    private static User map(ResultSet rs) throws SQLException {
+        User u = new User();
+        u.setId(rs.getInt("id"));
+        u.setUsername(rs.getString("username"));
+        u.setRole(Role.valueOf(rs.getString("role")));
+        return u;
     }
 }

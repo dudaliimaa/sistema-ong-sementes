@@ -9,80 +9,88 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     
     <style>
-        /* --- CONFIGURAÇÕES DE ESTILO (CSS) --- */
-        body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
-        :root {
-            --primary-color: #0f4c75; /* Azul Profundo */
-            --accent-color: #3282b8;  /* Azul Médio */
-            --highlight: #bbe1fa;     /* Azul Claro */
-        }
+        /* --- 2. ESTILOS PERSONALIZADOS (CSS) --- */
+        
+        /* Define a cor de fundo padrão e a fonte do sistema */
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; padding-top: 70px; }
+        
+        /* Utilitário para esconder elementos antes do JavaScript carregar (evita piscar) */
         [x-cloak] { display: none !important; }
         .cursor-pointer { cursor: pointer; }
 
-        /* Identidade Visual */
-        .bg-ong { background-color: var(--primary-color); }
-        .text-ong { color: var(--primary-color); }
-        .btn-ong { background-color: var(--primary-color); color: white; border: none; transition: 0.3s; }
-        .btn-ong:hover { background-color: #0b3857; color: white; transform: translateY(-2px); }
-        .ong-logo { height: 50px; width: auto; margin-right: 10px; background: white; border-radius: 50%; padding: 2px; } 
+        /* PALETA DE CORES (Tema Azul Oceano) */
+        :root { 
+            --primary: #0f4c75; /* Azul Profundo (Identidade da ONG) */
+            --accent: #3282b8;  /* Azul Médio (Destaques) */
+        }
         
-        /* Sidebar (Barra Lateral) */
-        .sidebar { min-height: 100vh; background: linear-gradient(180deg, var(--primary-color) 0%, #1b262c 100%); color: white; width: 260px; position: fixed; z-index: 1000; box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
-        .sidebar a { color: rgba(255,255,255,0.8); text-decoration: none; padding: 14px 25px; display: flex; align-items: center; border-left: 4px solid transparent; transition: 0.3s; margin-bottom: 5px; }
-        .sidebar a:hover, .sidebar a.active { background-color: rgba(255,255,255,0.1); color: white; border-left-color: var(--highlight); font-weight: 600; }
-        .sidebar-brand { padding: 20px; font-size: 1.2rem; font-weight: bold; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        /* Classes utilitárias para usar as cores acima */
+        .bg-ong { background-color: var(--primary); }
+        .text-ong { color: var(--primary); }
         
-        /* Layout Principal */
-        .wrapper { display: flex; width: 100%; }
-        .main-content { width: 100%; padding: 40px; margin-left: 260px; min-height: 100vh; }
+        /* Estilização dos Botões Principais */
+        .btn-ong { background-color: var(--primary); color: white; border: none; }
+        .btn-ong:hover { background-color: #0b3857; color: white; } /* Efeito ao passar o mouse */
         
-        /* Landing Page (Tela Inicial) */
-        .landing-hero { background: linear-gradient(rgba(15, 76, 117, 0.9), rgba(27, 38, 44, 0.85)), url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1920'); background-size: cover; background-position: center; height: 100vh; color: white; display: flex; align-items: center; justify-content: center; text-align: center; }
+        /* Estilo da Logo (Redonda e com borda branca) */
+        .ong-logo { height: 40px; margin-right: 10px; background: white; border-radius: 50%; padding: 2px; }
         
-        /* Cards de Estatísticas */
-        .stat-card { border: none; border-radius: 16px; padding: 25px; color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.1); position: relative; overflow: hidden; transition: transform 0.3s; }
-        .stat-card:hover { transform: translateY(-5px); }
-        .bg-grad-1 { background: linear-gradient(45deg, #0f4c75, #3282b8); }
-        .bg-grad-2 { background: linear-gradient(45deg, #ff9f1a, #ffc107); }
-        .bg-grad-3 { background: linear-gradient(45deg, #20bf6b, #26de81); }
-
-        /* Estilos do Perfil */
-        .profile-header { background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); height: 200px; border-radius: 16px 16px 0 0; position: relative; }
-        .profile-avatar { width: 160px; height: 160px; border-radius: 50%; border: 5px solid white; background-color: #e9ecef; margin-top: -80px; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        /* Estilo dos Cards do Painel (Dashboard) */
+        .stat-card { border: none; border-radius: 12px; padding: 20px; color: white; position: relative; overflow: hidden; }
         
-        /* Botão de Edição Destacado */
-        .btn-edit-profile { position: absolute; bottom: 20px; right: 20px; background-color: rgba(255,255,255,0.2); color: white; border: 1px solid white; backdrop-filter: blur(5px); transition: 0.3s; }
-        .btn-edit-profile:hover { background-color: white; color: var(--primary-color); transform: scale(1.05); }
-
-        .clickable-profile:hover { background-color: #f8f9fa !important; cursor: pointer; transition: 0.2s; }
+        /* Gradientes para os Cards de Estatística */
+        .bg-grad-1 { background: linear-gradient(45deg, #0f4c75, #3282b8); } /* Azul */
+        .bg-grad-2 { background: linear-gradient(45deg, #ff9f1a, #ffc107); } /* Amarelo */
+        .bg-grad-3 { background: linear-gradient(45deg, #20bf6b, #26de81); } /* Verde */
+        
+        /* Foto de Perfil Redonda */
+        .profile-avatar { width: 150px; height: 150px; object-fit: cover; border: 5px solid white; border-radius: 50%; background: #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        
+        /* Correção para Links agirem como Botões */
+        .nav-link-custom { cursor: pointer; text-decoration: none; z-index: 1050; position: relative; }
+        .nav-link-custom:hover { text-decoration: underline; }
+        
+        /* Navbar Superior Fixa (Azul Escuro) */
+        .navbar-custom { background-color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        /* Links do Menu Superior */
+        .nav-link { color: rgba(255,255,255,0.9) !important; font-weight: 500; margin: 0 5px; }
+        .nav-link:hover, .nav-link.active { color: white !important; font-weight: bold; }
     </style>
 
     <script>
         function sys() {
             return {
-                view: 'home',
-                token: localStorage.getItem('token'),
-                user: {},
-                extraData: {}, 
-                isAdmin: false,
+                // --- ESTADO GLOBAL DA APLICAÇÃO ---
+                view: 'home', // Define qual tela o usuário está vendo agora
+                token: localStorage.getItem('token'), // Guarda o token de login
+                user: {}, // Guarda dados do usuário logado
+                extraData: {}, // Guarda dados extras do perfil (visual)
+                isAdmin: false, // Define se o usuário é Chefe ou Voluntário
                 
-                // Formulários
-                form: { username: '', password: '', adminCode: '' },
+                // --- DADOS DOS FORMULÁRIOS ---
+                form: { username: '', password: '', adminCode: '' }, // Login/Cadastro
+                profileForm: { name: '', email: '', phone: '', address: '', bio: '', photoUrl: '' }, // Edição de Perfil
+                newUserForm: { username: '', password: '', role: 'USER' }, // Novo usuário (Admin)
                 
-                // Dados do Perfil
-                editingProfile: false,
-                profileForm: { name: '', email: '', phone: '', address: '', bio: '', photoUrl: '' },
+                // Formulário de Doação (Com Logística)
+                formDoacao: { descricao: '', quantidade: '', destino: '' },
                 
-                newDesc: '', list: [], usersList: [], modalUser: false, newUserForm: { username: '', password: '', role: 'USER' },
-                toast: { show: false, msg: '', type: 'success' },
+                // Controles de Interface
+                editingProfile: false, // Se está editando perfil
+                modalUser: false, // Se o modal de admin está aberto
+                list: [], // Lista de doações
+                usersList: [], // Lista de equipe
+                toast: { show: false, msg: '', type: 'success' }, // Notificação flutuante
+                
+                logoSrc: 'https://cdn-icons-png.flaticon.com/512/1598/1598196.png', // Imagem da Logo
 
-                // LOGO (Placeholder)
-                logoSrc: 'https://cdn-icons-png.flaticon.com/512/1598/1598196.png', 
-
-                // Inicialização do Sistema
+                // --- INICIALIZAÇÃO (Roda ao abrir o site) ---
                 init() {
+                    // Tenta recuperar usuário salvo na memória
                     try { this.user = JSON.parse(localStorage.getItem('user')) || {}; } catch (e) { this.user = {}; }
-                    this.loadExtraData();
+                    this.loadExtraData(); // Carrega perfil visual
+                    
+                    // Se já tiver token, vai direto pro Painel
                     if(this.token) {
                         this.isAdmin = (this.user.role === 'ADMIN');
                         this.view = 'dashboard';
@@ -90,105 +98,110 @@
                     }
                 },
 
-                // Carrega dados extras do perfil (simulado)
+                // Função auxiliar para exibir o cargo de forma amigável
+                getRoleLabel() {
+                    return this.isAdmin ? 'Coordenador' : 'Voluntário';
+                },
+
+                // --- GERENCIAMENTO DE PERFIL (LOCALSTORAGE) ---
                 loadExtraData() {
                     const key = `profile_${this.user.username || 'guest'}`;
                     const stored = localStorage.getItem(key);
-                    if (stored) {
-                        this.extraData = JSON.parse(stored);
-                    } else {
-                        this.extraData = { 
-                            name: this.user.username || 'Voluntário', 
-                            email: 'email@exemplo.com', 
-                            phone: '(13) 99999-9999', 
-                            address: 'Praia Grande, SP', 
-                            bio: 'Colaborador dedicado da ONG Sementes do Amanhã.',
-                            photoUrl: '' 
-                        };
-                    }
+                    // Se tiver perfil salvo, usa. Senão, usa dados padrão.
+                    this.extraData = stored ? JSON.parse(stored) : { name: this.user.username || 'Voluntário', email: 'email@teste.com', phone: '-', address: '-', bio: 'Colaborador.', photoUrl: '' };
                 },
-
-                openEditProfile() {
-                    this.profileForm = { ...this.extraData }; 
-                    this.editingProfile = true;
-                },
-
+                openEditProfile() { this.profileForm = { ...this.extraData }; this.editingProfile = true; },
                 saveProfileLocal() {
+                    // Salva alterações de perfil no navegador
                     this.extraData = { ...this.profileForm };
-                    if(!this.extraData.photoUrl) this.extraData.photoUrl = '';
-                    const key = `profile_${this.user.username}`;
-                    localStorage.setItem(key, JSON.stringify(this.extraData));
+                    localStorage.setItem(`profile_${this.user.username}`, JSON.stringify(this.extraData));
                     this.editingProfile = false;
-                    this.notify('Perfil atualizado com sucesso!', 'success');
+                    this.notify('Salvo com sucesso!', 'success');
                 },
 
+                // --- NAVEGAÇÃO ---
+                navigate(to) { this.view = to; },
+
+                // --- COMUNICAÇÃO COM O BACKEND (JAVA) ---
                 async req(url, method = 'GET', body = null) {
                     const opts = { method, headers: { 'Content-Type': 'application/json' } };
+                    // Adiciona Token no cabeçalho para segurança
                     if (this.token) opts.headers['Authorization'] = this.token;
                     if (body) opts.body = JSON.stringify(body);
+                    
                     const res = await fetch('/api' + url, opts);
+                    
+                    // Se o token expirou (401), desloga
                     if (res.status === 401) { this.logout(); return null; }
                     return res;
                 },
-                
-                // Funções de Autenticação
+
+                // --- AUTENTICAÇÃO ---
                 async login() {
                     const res = await fetch('/login', { method: 'POST', body: JSON.stringify(this.form) });
                     if(res && res.ok) {
                         const data = await res.json();
                         this.token = data.token;
                         this.user = { username: data.username, role: data.role, id: data.id };
-                        this.isAdmin = (data.role === 'ADMIN');
+                        this.isAdmin = (data.role === 'ADMIN'); // Define permissão
+                        
+                        // Salva sessão
                         localStorage.setItem('token', this.token);
                         localStorage.setItem('user', JSON.stringify(this.user));
+                        
                         this.loadExtraData();
                         this.form = { username: '', password: '', adminCode: '' };
                         this.view = 'dashboard';
                         this.fetchAll();
-                    } else this.notify('Dados inválidos', 'danger');
+                    } else this.notify('Login incorreto', 'danger');
                 },
+                
                 async register() {
+                    // Envia código admin junto (se houver)
                     const res = await fetch('/signup', { method: 'POST', body: JSON.stringify(this.form) });
-                    if(res && res.ok) { this.notify('Cadastro realizado! Faça login.', 'success'); this.view = 'login'; } 
+                    if(res && res.ok) { this.notify('Cadastrado! Faça Login.', 'success'); this.view = 'login'; } 
                     else this.notify('Erro ao cadastrar.', 'warning');
                 },
+                
                 logout() { this.token = null; localStorage.clear(); this.view = 'home'; },
                 
-                // Funções de Dados (Doações)
+                // --- CRUD DOAÇÕES ---
                 async fetchAll() {
                     if(!this.token) return;
+                    // Admin vê tudo, Voluntário vê só dele
                     const url = this.isAdmin ? '/admin/doacoes' : '/doacoes';
                     const res = await this.req(url);
                     if(res && res.ok) this.list = await res.json();
                 },
+                
                 async addDoacao() {
-                    if(!this.newDesc) return;
-                    const res = await this.req('/doacoes', 'POST', { descricao: this.newDesc });
-                    if(res && res.ok) { this.newDesc = ''; this.notify('Doação registrada com sucesso!', 'success'); if(!this.isAdmin) this.view = 'dashboard'; this.fetchAll(); }
+                    if(!this.formDoacao.descricao) return this.notify("Preencha a descrição.", "warning");
+                    // Envia os 3 campos (Logística)
+                    const res = await this.req('/doacoes', 'POST', this.formDoacao);
+                    if(res && res.ok) { 
+                        this.formDoacao = { descricao: '', quantidade: '', destino: '' }; // Limpa form
+                        this.notify('Registrado!', 'success'); 
+                        if(!this.isAdmin) this.view = 'dashboard'; 
+                        this.fetchAll(); 
+                    }
                 },
+                
                 async toggleStatus(item) {
                     item.recebido = !item.recebido;
                     await this.req(`/doacoes/${item.id}`, 'PUT', item);
-                    this.notify('Status atualizado.', 'success');
+                    this.notify('Atualizado!', 'success');
                 },
+                
                 async deleteDoacao(id) {
-                    if(confirm("Tem certeza que deseja excluir?")) { await this.req(`/doacoes/${id}`, 'DELETE'); this.fetchAll(); }
+                    if(confirm("Apagar?")) { await this.req(`/doacoes/${id}`, 'DELETE'); this.fetchAll(); }
                 },
                 
-                // Funções Administrativas (Usuários)
-                async fetchUsers() {
-                    const res = await this.req('/admin/users');
-                    if(res && res.ok) this.usersList = await res.json();
-                },
-                async createUser() {
-                    const res = await this.req('/admin/users', 'POST', this.newUserForm);
-                    if(res && res.ok) { this.modalUser = false; this.fetchUsers(); this.notify('Membro adicionado!', 'success'); }
-                },
-                async deleteUser(u) {
-                    if(confirm("Remover membro?")) { await this.req(`/admin/users/${u}`, 'DELETE'); this.fetchUsers(); }
-                },
+                // --- ADMINISTRAÇÃO (USUÁRIOS) ---
+                async fetchUsers() { const res = await this.req('/admin/users'); if(res && res.ok) this.usersList = await res.json(); },
+                async createUser() { const res = await this.req('/admin/users', 'POST', this.newUserForm); if(res && res.ok) { this.modalUser = false; this.fetchUsers(); this.notify('Criado!', 'success'); } },
+                async deleteUser(u) { if(confirm("Remover?")) { await this.req(`/admin/users/${u}`, 'DELETE'); this.fetchUsers(); } },
                 
-                // Sistema de Notificação
+                // Notificação (Toast)
                 notify(msg, type) {
                     this.toast = { show: true, msg, type };
                     setTimeout(() => this.toast.show = false, 3000);
@@ -204,259 +217,151 @@
 
 <div x-data="sys()" x-init="init()">
 
-    <div x-show="!token">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-ong py-3 shadow-sm fixed-top">
-            <div class="container">
-                <a class="navbar-brand fw-bold d-flex align-items-center cursor-pointer" @click="view='home'">
-                    <img :src="logoSrc" alt="Logo" class="ong-logo">
-                    <span>Sementes do Amanhã</span>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#publicNav"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="publicNav">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-3 align-items-center">
-                        <li class="nav-item"><a class="nav-link text-white fw-semibold cursor-pointer" @click="view='home'">Início</a></li>
-                        <li class="nav-item"><a class="nav-link text-white fw-semibold cursor-pointer" @click="view='about'">Quem Somos</a></li>
-                        
-                        <li class="nav-item"><button class="btn btn-outline-light px-4 fw-bold rounded-pill" @click="view='login'">Login</button></li>
-                        
-                        <li class="nav-item"><button class="btn btn-light text-ong px-4 fw-bold rounded-pill" @click="view='register'">Cadastre-se</button></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <div x-show="view === 'home'">
-            <div class="landing-hero fade-in">
-                <div class="container">
-                    <h1 class="display-3 fw-bold mb-3">Conectando Solidariedade</h1>
-                    <p class="lead mb-5 fs-4" style="max-width: 700px; margin: 0 auto;">Plataforma inteligente para gestão de recursos e voluntariado. Transparência e agilidade para quem mais precisa.</p>
-                    <div class="d-flex justify-content-center gap-3">
-                        <button class="btn btn-light btn-lg px-5 py-3 fw-bold text-ong rounded-pill shadow" @click="view='register'">Junte-se a Nós</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div x-show="view === 'about'" class="container fade-in" style="margin-top: 120px;">
-            <div class="row align-items-center mb-5">
-                <div class="col-lg-6">
-                    <h5 class="text-ong fw-bold">QUEM SOMOS</h5>
-                    <h1 class="display-5 fw-bold mb-4">Sementes do Amanhã</h1>
-                    <p class="lead text-secondary">Uma organização sem fins lucrativos dedicada a combater a insegurança alimentar e promover a dignidade humana na nossa região.</p>
-                    <p class="text-muted">Fundada com o propósito de ser a ponte entre o doador e as famílias em situação de vulnerabilidade.</p>
-                </div>
-                <div class="col-lg-6 text-center">
-                    <img src="https://images.unsplash.com/photo-1593113630400-ea4288922497?q=80&w=800" class="img-fluid rounded-4 shadow-lg" alt="Voluntários">
-                </div>
-            </div>
-        </div>
-
-        <div x-show="view === 'login'" class="d-flex align-items-center justify-content-center vh-100 bg-white fade-in">
-            <div class="card border-0 shadow-lg p-4 rounded-4" style="width: 400px;">
-                <div class="card-body">
-                    <button class="btn btn-link text-decoration-none text-ong fw-bold p-0 mb-4" @click="view='home'"><i class="bi bi-arrow-left"></i> Voltar</button>
-                    <h3 class="fw-bold text-center text-dark mb-4">Acesso Restrito</h3>
-                    <form @submit.prevent="login">
-                        <div class="form-floating mb-3"><input x-model="form.username" class="form-control rounded-3" id="uLogin" placeholder="User" required><label for="uLogin">Usuário</label></div>
-                        <div class="form-floating mb-4"><input type="password" x-model="form.password" class="form-control rounded-3" id="pLogin" placeholder="Pass" required><label for="pLogin">Senha</label></div>
-                        <button class="btn btn-ong w-100 py-3 fw-bold rounded-pill">ENTRAR</button>
-                    </form>
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top" style="background-color: #0f4c75;">
+        <div class="container">
+            <a class="navbar-brand fw-bold d-flex align-items-center cursor-pointer" @click="view='home'">
+                <img :src="logoSrc" class="ong-logo"> Sementes do Amanhã
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"><span class="navbar-toggler-icon"></span></button>
+            
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
                     
-                    </div>
-            </div>
-        </div>
-
-        <div x-show="view === 'register'" class="d-flex align-items-center justify-content-center vh-100 bg-white fade-in">
-            <div class="card border-0 shadow-lg p-4 rounded-4" style="width: 450px;">
-                <div class="card-body">
-                    <button class="btn btn-link text-decoration-none text-ong fw-bold p-0 mb-4" @click="view='home'"><i class="bi bi-house"></i> Início</button>
-                    <h3 class="fw-bold text-center text-dark mb-4">Seja um Voluntário</h3>
-                    <form @submit.prevent="register">
-                        <div class="mb-3"><label class="fw-bold small mb-1">Nome de Usuário</label><input x-model="form.username" class="form-control form-control-lg bg-light border-0" required placeholder="Como quer ser chamado?"></div>
-                        <div class="mb-3"><label class="fw-bold small mb-1">Crie uma Senha</label><input type="password" x-model="form.password" class="form-control form-control-lg bg-light border-0" required></div>
-                        <div class="mb-4"><label class="fw-bold small mb-1 text-muted">Código Admin (Opcional)</label><input type="password" x-model="form.adminCode" class="form-control form-control-lg bg-light border-0"></div>
-                        <button class="btn btn-ong w-100 py-3 fw-bold rounded-pill">CRIAR MINHA CONTA</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <template x-if="token">
-        <div class="wrapper">
-            <div class="sidebar">
-                <div class="sidebar-brand">
-                    <img :src="logoSrc" alt="Logo" class="ong-logo">
-                    <span>Sementes do Amanhã</span>
-                </div>
-                <div class="mt-4">
-                    <small class="text-white-50 ms-3 text-uppercase fw-bold" style="font-size: 0.75rem;">Navegação</small>
-                    <a href="#" :class="view==='dashboard'?'active':''" @click.prevent="view='dashboard'; fetchAll()"><i class="bi bi-grid-1x2-fill me-3"></i> Dashboard</a>
-                    <a href="#" :class="view==='profile'?'active':''" @click.prevent="view='profile'"><i class="bi bi-person-badge-fill me-3"></i> Meu Perfil</a>
-                    <template x-if="isAdmin">
-                        <div class="mt-4">
-                            <small class="text-white-50 ms-3 text-uppercase fw-bold" style="font-size: 0.75rem;">Administração</small>
-                            <a href="#" :class="view==='admin_users'?'active':''" @click.prevent="view='admin_users'; fetchUsers()"><i class="bi bi-people-fill me-3"></i> Gestão de Equipe</a>
-                        </div>
-                    </template>
-                </div>
-                <div class="mt-auto p-3" style="position: absolute; bottom: 0; width: 100%;">
-                    <button class="btn btn-outline-light w-100" @click="logout()"><i class="bi bi-box-arrow-left me-2"></i> Sair do Sistema</button>
-                </div>
-            </div>
-
-            <div class="main-content">
-                <div class="d-flex justify-content-between align-items-center mb-5">
-                    <div>
-                        <h3 class="fw-bold text-dark m-0" x-text="view === 'dashboard' ? 'Painel de Controle' : (view === 'profile' ? 'Meu Perfil' : 'Gestão de Equipe')"></h3>
-                        <p class="text-muted small m-0" x-text="'Olá, ' + extraData.name + '. Bem-vindo(a) de volta.'"></p>
-                    </div>
-                    <div class="d-flex align-items-center clickable-profile bg-white px-3 py-2 rounded-pill shadow-sm border" @click="view='profile'">
-                        <img :src="extraData.photoUrl || 'https://ui-avatars.com/api/?name='+user.username+'&background=0f4c75&color=fff'" class="rounded-circle me-2" width="40" height="40" style="object-fit: cover; border: 2px solid var(--primary-color);">
-                        <div class="d-flex flex-column me-2 text-end">
-                            <span class="fw-bold text-dark small" x-text="user.username"></span>
-                            <span class="text-muted" style="font-size: 0.7rem;" x-text="isAdmin ? 'Coordenador' : 'Voluntário'"></span>
-                        </div>
-                        <i class="bi bi-chevron-down text-muted small"></i>
-                    </div>
-                </div>
-
-                <div x-show="view === 'dashboard'" class="fade-in">
-                    <div class="row g-4 mb-5">
-                        <div class="col-md-4"><div class="stat-card bg-grad-1"><h6>Total Doações</h6><h3 x-text="list.length">0</h3><i class="bi bi-box-seam"></i></div></div>
-                        <div class="col-md-4"><div class="stat-card bg-grad-2"><h6>Pendentes</h6><h3 x-text="list.filter(x => !x.recebido).length">0</h3><i class="bi bi-clock-history"></i></div></div>
-                        <div class="col-md-4"><div class="stat-card bg-grad-3"><h6>Entregues</h6><h3 x-text="list.filter(x => x.recebido).length">0</h3><i class="bi bi-check-circle"></i></div></div>
-                    </div>
-                    
-                    <template x-if="!isAdmin">
-                        <div class="card border-0 shadow-sm rounded-4 mb-4">
-                            <div class="card-body p-4 bg-white rounded-4 border-start border-5 border-primary">
-                                <label class="fw-bold mb-2 text-ong fs-5"><i class="bi bi-plus-circle me-2"></i>Registrar Nova Doação</label>
-                                <div class="input-group input-group-lg">
-                                    <input type="text" class="form-control border bg-light" placeholder="Descreva o item..." x-model="newDesc" @keyup.enter="addDoacao()">
-                                    <button class="btn btn-ong fw-bold px-4" @click="addDoacao()">REGISTRAR</button>
-                                </div>
-                            </div>
+                    <template x-if="!token">
+                        <div class="d-flex gap-2 align-items-center">
+                            <a class="nav-link cursor-pointer" @click="view='home'">Início</a>
+                            <a class="nav-link cursor-pointer" @click="view='about'">Sobre</a>
+                            <a class="nav-link cursor-pointer fw-bold" @click="view='register'">Cadastre-se</a>
+                            <button class="btn btn-light text-ong btn-sm px-3 fw-bold" @click="view='login'">Login</button>
                         </div>
                     </template>
 
-                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="bg-light"><tr><th class="ps-4 py-3">Descrição</th><th>Status</th><th class="text-end pe-4">Ações</th></tr></thead>
-                            <tbody>
-                                <template x-for="d in list" :key="d.id">
-                                    <tr>
-                                        <td class="ps-4 fw-bold text-dark" x-text="d.descricao"></td>
-                                        <td><span class="badge rounded-pill px-3" :class="d.recebido ? 'bg-success' : 'bg-warning text-dark'"><span x-text="d.recebido ? 'Recebido' : 'Pendente'"></span></span></td>
-                                        <td class="text-end pe-4">
-                                            <button class="btn btn-sm btn-outline-success me-1" @click="toggleStatus(d)"><i class="bi bi-arrow-repeat"></i></button>
-                                            <button class="btn btn-sm btn-outline-danger" @click="deleteDoacao(d.id)" x-show="isAdmin || !d.recebido"><i class="bi bi-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                </template>
-                            </tbody>
-                        </table>
+                    <template x-if="token">
+                        <div class="d-flex gap-2 align-items-center">
+                            <a class="nav-link cursor-pointer" @click="view='dashboard'; fetchAll()">Painel</a>
+                            <a class="nav-link cursor-pointer" @click="view='profile'">Perfil</a>
+                            <template x-if="isAdmin"><a class="nav-link cursor-pointer text-warning" @click="view='admin_users'; fetchUsers()">Equipe</a></template>
+                            <button class="btn btn-outline-light btn-sm" @click="logout()">Sair</button>
+                        </div>
+                    </template>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        
+        <div x-show="view === 'home'" class="text-center py-5">
+            <h1 class="display-4 fw-bold text-ong mb-3">Juntos Somos Mais Fortes</h1>
+            <p class="lead text-muted mb-5">Plataforma oficial de gestão de doações e voluntariado.</p>
+            <div class="row justify-content-center g-4">
+                <div class="col-md-4"><div class="p-4 bg-white shadow-sm rounded-4"><i class="bi bi-shield-check display-4 text-ong"></i><h5 class="mt-3">Segurança</h5></div></div>
+                <div class="col-md-4"><div class="p-4 bg-white shadow-sm rounded-4"><i class="bi bi-heart-fill display-4 text-ong"></i><h5 class="mt-3">Solidariedade</h5></div></div>
+                <div class="col-md-4"><div class="p-4 bg-white shadow-sm rounded-4"><i class="bi bi-graph-up-arrow display-4 text-ong"></i><h5 class="mt-3">Transparência</h5></div></div>
+            </div>
+        </div>
+
+        <div x-show="view === 'about'" class="py-5">
+            <h2 class="text-ong fw-bold mb-4">Sobre a ONG</h2>
+            <div class="bg-white p-5 shadow-sm rounded-4"><p class="fs-5 text-secondary">A Sementes do Amanhã atua combatendo a insegurança alimentar e apoiando famílias em vulnerabilidade.</p></div>
+        </div>
+
+        <div x-show="view === 'login'" class="row justify-content-center">
+            <div class="col-md-4"><div class="card border-0 shadow-lg p-4 rounded-4"><div class="card-body">
+                <div class="mb-4"><a class="nav-link-custom text-ong fw-bold" @click.prevent="navigate('home')"><i class="bi bi-arrow-left"></i> Voltar</a></div>
+                <h3 class="text-center text-ong fw-bold mb-4">Acesso</h3>
+                <form @submit.prevent="login">
+                    <div class="mb-3"><input x-model="form.username" class="form-control" placeholder="Usuário" required></div>
+                    <div class="mb-3"><input type="password" x-model="form.password" class="form-control" placeholder="Senha" required></div>
+                    <button class="btn btn-ong w-100 rounded-pill fw-bold">ENTRAR</button>
+                </form>
+                <div class="text-center mt-4"><a class="nav-link-custom text-muted small fw-bold" @click.prevent="view='register'">Não tem conta? Cadastre-se</a></div>
+            </div></div></div>
+        </div>
+
+        <div x-show="view === 'register'" class="row justify-content-center">
+            <div class="col-md-5"><div class="card border-0 shadow-lg p-4 rounded-4"><div class="card-body">
+                <div class="mb-4"><a class="nav-link-custom text-ong fw-bold" @click.prevent="navigate('home')"><i class="bi bi-house"></i> Início</a></div>
+                <h3 class="text-center text-ong fw-bold mb-4">Novo Voluntário</h3>
+                <form @submit.prevent="register">
+                    <div class="mb-3"><label class="small fw-bold">Usuário</label><input x-model="form.username" class="form-control" required></div>
+                    <div class="mb-3"><label class="small fw-bold">Senha</label><input type="password" x-model="form.password" class="form-control" required></div>
+                    <div class="mb-4"><label class="small fw-bold text-muted">Cód. Admin (Opcional)</label><input type="password" x-model="form.adminCode" class="form-control"></div>
+                    <button class="btn btn-ong w-100 rounded-pill fw-bold">CRIAR CONTA</button>
+                </form>
+                <div class="text-center mt-4"><a class="nav-link-custom text-ong small fw-bold" @click.prevent="navigate('login')">Já tenho cadastro</a></div>
+            </div></div></div>
+        </div>
+
+        <div x-show="view === 'dashboard'">
+            <div class="row g-4 mb-4">
+                <div class="col-md-4"><div class="stat-card bg-grad-1"><h6>Total</h6><h3 x-text="list.length">0</h3></div></div>
+                <div class="col-md-4"><div class="stat-card bg-grad-2"><h6>Pendentes</h6><h3 x-text="list.filter(x => !x.recebido).length">0</h3></div></div>
+                <div class="col-md-4"><div class="stat-card bg-grad-3"><h6>Entregues</h6><h3 x-text="list.filter(x => x.recebido).length">0</h3></div></div>
+            </div>
+            
+            <template x-if="!isAdmin">
+                <div class="card border-0 shadow-sm mb-4 p-4">
+                    <h5 class="text-ong fw-bold mb-3">Registrar Doação</h5>
+                    <div class="row g-2">
+                        <div class="col-md-6"><input type="text" class="form-control" placeholder="O que foi doado? (Ex: Arroz)" x-model="formDoacao.descricao"></div>
+                        <div class="col-md-3"><input type="text" class="form-control" placeholder="Qtd (Ex: 5kg)" x-model="formDoacao.quantidade"></div>
+                        <div class="col-md-3"><select class="form-select" x-model="formDoacao.destino"><option value="">Destino...</option><option value="Sede">Sede</option><option value="Família">Família</option></select></div>
+                        <div class="col-12 text-end mt-2"><button class="btn btn-ong px-5 fw-bold" @click="addDoacao()">SALVAR</button></div>
                     </div>
                 </div>
+            </template>
 
-                <div x-show="view === 'profile'" class="fade-in">
-                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-                        <div class="profile-header d-flex align-items-end justify-content-end p-3">
-                            <button class="btn btn-edit-profile fw-bold rounded-pill px-4 py-2" @click="editingProfile ? saveProfileLocal() : openEditProfile()">
-                                <i class="bi" :class="editingProfile ? 'bi-check-lg' : 'bi-pencil-fill'"></i>
-                                <span x-text="editingProfile ? 'Salvar Alterações' : 'Editar Perfil'"></span>
-                            </button>
-                        </div>
-                        
-                        <div class="card-body p-5 pt-0">
-                            <div style="margin-top: -80px; margin-bottom: 30px;">
-                                <img :src="extraData.photoUrl || 'https://ui-avatars.com/api/?name='+user.username+'&background=0f4c75&color=fff&size=200'" class="profile-avatar bg-white">
-                            </div>
+            <div class="card border-0 shadow-sm">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light"><tr><th class="ps-4">Item / Detalhes</th><th>Status</th><th class="text-end pe-4">Ação</th></tr></thead>
+                    <tbody>
+                        <template x-for="d in list" :key="d.id">
+                            <tr>
+                                <td class="ps-4">
+                                    <div><span class="fw-bold text-dark" x-text="d.descricao"></span>
+                                    <div class="small text-muted">Qtd: <span x-text="d.quantidade || '-'"></span> | Destino: <span x-text="d.destino || '-'"></span></div></div>
+                                </td>
+                                <td><span class="badge rounded-pill" :class="d.recebido?'bg-success':'bg-warning text-dark'" x-text="d.recebido?'Recebido':'Pendente'"></span></td>
+                                <td class="text-end pe-4">
+                                    <button class="btn btn-sm btn-outline-success me-1" @click="toggleStatus(d)" x-show="isAdmin" title="Confirmar"><i class="bi bi-check-lg"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger" @click="deleteDoacao(d.id)" x-show="isAdmin || !d.recebido"><i class="bi bi-trash"></i></button>
+                                </td>
+                            </tr>
+                        </template>
+                        <tr x-show="list.length===0"><td colspan="3" class="text-center py-4 text-muted">Nenhum registro.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-                            <div x-show="!editingProfile">
-                                <h2 class="fw-bold mb-1" x-text="extraData.name"></h2>
-                                <p class="text-muted mb-4"><i class="bi bi-geo-alt-fill me-1 text-danger"></i> <span x-text="extraData.address"></span></p>
-                                
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        <div class="p-4 bg-light rounded-4 border h-100">
-                                            <h6 class="fw-bold text-muted text-uppercase small ls-1">Sobre Mim</h6>
-                                            <p class="mt-2 mb-0 fs-5" x-text="extraData.bio"></p>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="p-4 bg-light rounded-4 border h-100">
-                                            <h6 class="fw-bold text-muted text-uppercase small ls-1">Contato</h6>
-                                            <div class="mt-2"><i class="bi bi-envelope me-2 text-primary"></i> <span x-text="extraData.email"></span></div>
-                                            <div class="mt-1"><i class="bi bi-telephone me-2 text-success"></i> <span x-text="extraData.phone"></span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div x-show="editingProfile">
-                                <div class="alert alert-info border-0 bg-light text-dark mb-4"><i class="bi bi-info-circle me-2"></i> Edite suas informações abaixo.</div>
-                                <div class="row g-3">
-                                    <div class="col-md-6"><label class="form-label fw-bold small">Nome</label><input x-model="profileForm.name" class="form-control"></div>
-                                    <div class="col-md-6"><label class="form-label fw-bold small">Foto URL</label><input x-model="profileForm.photoUrl" class="form-control" placeholder="http://..."></div>
-                                    <div class="col-md-6"><label class="form-label fw-bold small">Email</label><input x-model="profileForm.email" class="form-control"></div>
-                                    <div class="col-md-6"><label class="form-label fw-bold small">Telefone</label><input x-model="profileForm.phone" class="form-control"></div>
-                                    <div class="col-12"><label class="form-label fw-bold small">Endereço</label><input x-model="profileForm.address" class="form-control"></div>
-                                    <div class="col-12"><label class="form-label fw-bold small">Bio</label><textarea x-model="profileForm.bio" class="form-control" rows="2"></textarea></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div x-show="view === 'profile'" class="text-center">
+            <div class="bg-white p-5 shadow rounded-4 d-inline-block" style="max-width: 600px; width: 100%;">
+                <img :src="extraData.photoUrl || 'https://ui-avatars.com/api/?name='+user.username+'&background=0f4c75&color=fff'" class="profile-avatar mb-3">
+                <h2 x-text="extraData.name" class="fw-bold text-ong"></h2>
+                <p class="badge bg-secondary" x-text="getRoleLabel()"></p>
+                <p class="text-muted mt-2" x-text="extraData.address"></p>
+                <hr>
+                <div x-show="!editingProfile">
+                    <p x-text="extraData.bio" class="fst-italic text-muted"></p>
+                    <button class="btn btn-outline-primary rounded-pill px-4 mt-3" @click="openEditProfile()">Editar Perfil</button>
                 </div>
-
-                <div x-show="isAdmin && view === 'admin_users'" class="fade-in">
-                    <div class="card border-0 shadow-sm rounded-4">
-                        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                            <h5 class="m-0 fw-bold text-secondary">Equipe</h5>
-                            <button class="btn btn-ong btn-sm rounded-pill px-3 fw-bold" @click="modalUser=true">+ Adicionar</button>
-                        </div>
-                        <div class="card-body p-0">
-                            <table class="table mb-0">
-                                <thead class="bg-light"><tr><th class="ps-4">Nome</th><th>Cargo</th><th class="text-end pe-4">Remover</th></tr></thead>
-                                <tbody>
-                                    <template x-for="u in usersList" :key="u.id">
-                                        <tr>
-                                            <td class="ps-4 fw-bold" x-text="u.username"></td>
-                                            <td><span class="badge" :class="u.role==='ADMIN'?'bg-danger':'bg-primary'" x-text="u.role"></span></td>
-                                            <td class="text-end pe-4"><button class="btn btn-sm text-danger" @click="deleteUser(u.username)" :disabled="u.username===user.username"><i class="bi bi-x-lg"></i></button></td>
-                                        </tr>
-                                    </template>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div x-show="editingProfile" class="text-start">
+                    <label class="small fw-bold">Nome</label><input x-model="profileForm.name" class="form-control mb-2">
+                    <label class="small fw-bold">Endereço</label><input x-model="profileForm.address" class="form-control mb-2">
+                    <label class="small fw-bold">Bio</label><textarea x-model="profileForm.bio" class="form-control mb-3"></textarea>
+                    <div class="text-center"><button class="btn btn-success rounded-pill px-4" @click="saveProfileLocal()">Salvar</button></div>
                 </div>
             </div>
         </div>
-    </template>
 
-    <div x-show="modalUser" class="modal fade" :class="{ 'show d-block': modalUser }" style="background: rgba(0,0,0,0.5)">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow rounded-4">
-                <div class="modal-header bg-ong text-white">
-                    <h5 class="modal-title">Novo Membro</h5>
-                    <button type="button" class="btn-close btn-close-white" @click="modalUser=false"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <input x-model="newUserForm.username" class="form-control mb-3" placeholder="Nome">
-                    <input type="password" x-model="newUserForm.password" class="form-control mb-3" placeholder="Senha">
-                    <select x-model="newUserForm.role" class="form-select mb-4"><option value="USER">Voluntário</option><option value="ADMIN">Coordenador</option></select>
-                    <button class="btn btn-ong w-100 rounded-pill fw-bold" @click="createUser()">Salvar</button>
-                </div>
-            </div>
+        <div x-show="isAdmin && view === 'admin_users'">
+            <div class="d-flex justify-content-between mb-3"><h4 class="text-ong">Equipe</h4><button class="btn btn-ong btn-sm rounded-pill" @click="modalUser=true">+ Novo</button></div><div class="card border-0 shadow-sm"><table class="table mb-0"><thead class="table-light"><tr><th class="ps-4">Usuário</th><th>Cargo</th><th class="text-end pe-4">Ação</th></tr></thead><tbody><template x-for="u in usersList" :key="u.id"><tr><td class="ps-4 fw-bold" x-text="u.username"></td><td><span class="badge" :class="u.role==='ADMIN'?'bg-danger':'bg-primary'" x-text="u.role"></span></td><td class="text-end pe-4"><button class="btn btn-sm text-danger" @click="deleteUser(u.username)" :disabled="u.username===user.username"><i class="bi bi-x-lg"></i></button></td></tr></template></tbody></table></div>
         </div>
     </div>
-    
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
-        <div x-show="toast.show" class="toast show align-items-center text-white border-0 shadow" :class="'bg-' + toast.type">
-            <div class="d-flex p-1"><div class="toast-body fw-bold" x-text="toast.msg"></div></div>
-        </div>
-    </div>
+
+    <div x-show="modalUser" class="modal fade" :class="{ 'show d-block': modalUser }" style="background: rgba(0,0,0,0.5)"><div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow rounded-4"><div class="modal-header bg-ong text-white"><h5 class="modal-title">Novo Membro</h5><button type="button" class="btn-close btn-close-white" @click="modalUser=false"></button></div><div class="modal-body p-4"><input x-model="newUserForm.username" class="form-control mb-3" placeholder="Nome"><input type="password" x-model="newUserForm.password" class="form-control mb-3" placeholder="Senha"><select x-model="newUserForm.role" class="form-select mb-4"><option value="USER">Voluntário</option><option value="ADMIN">Coordenador</option></select><button class="btn btn-ong w-100 rounded-pill" @click="createUser()">Salvar</button></div></div></div></div>
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999"><div x-show="toast.show" class="toast show align-items-center text-white border-0 shadow" :class="'bg-' + toast.type"><div class="d-flex p-2 px-3"><div class="toast-body fw-bold" x-text="toast.msg"></div></div></div></div>
 </div>
 </body>
 </html>
